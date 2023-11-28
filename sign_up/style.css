@@ -1,0 +1,39 @@
+
+.main{
+            height: 100vh;
+            background-color: gray;
+}
+.second{
+            border: 1px solid transparent;
+            background-color:rgb(238, 235, 235);
+            border-radius: 5px;
+}
+.third{
+            border: 1px solid lightgray; 
+            background-color: white;
+            border-radius: 5px;
+
+}
+button{
+            border: none;
+}
+.signin{
+            color: rgb(75, 206, 75);
+            font-weight: bold;
+            font-size:larger;
+}
+.btn1{
+            background-color: rgb(75, 206, 75);
+            border: none;
+            border-radius: 5px;
+            height: 40px;
+            color: white;
+}
+.detail{
+            padding: 0 200px;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
