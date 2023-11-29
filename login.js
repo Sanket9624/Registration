@@ -1,7 +1,6 @@
 const express = require('express')
 const dotenv = require('dotenv');
 const result = dotenv.config();
-
 if (result.error) {
   throw result.error;
 }
@@ -29,7 +28,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Serve static files (e.g., your index.html)
-// app.use(express.static('public'));
+app.use(express.static('public'));
 
 
 app.use('/', express.static(path.join(__dirname, 'sign_in')));
