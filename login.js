@@ -19,7 +19,7 @@ const db = mysql.createConnection({
 })
 db.connect((err) => {
   if (err) {
-      throw err;
+      console.log(err);
   }
   console.log('Connected to the database');
 });
@@ -75,7 +75,7 @@ app.post('/register', (req, res) => {
         // Authentication successful - user found in the database
         // Reset the email field after successful login
         const script = '<script>document.getElementById("e-mail").value = "";</script>';
-         res.redirect('https://easy-blue-hippo-boot.cyclic.app/')// Send the script along with the response
+        res.redirect('https://easy-blue-hippo-boot.cyclic.app/') // Send the script along with the response
     } else {
           // Authentication failed - user not found or invalid credentials
           return res.status(401).send('User not found');
