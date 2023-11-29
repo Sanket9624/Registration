@@ -8,7 +8,7 @@ if (result.error) {
 const mysql =require('mysql2')
 const path = require('path')
 const bodyParser = require('body-parser');
-const { error } = require('console');
+const { error, log } = require('console');
 const app = express()
 
 const db = mysql.createConnection({
@@ -19,7 +19,7 @@ const db = mysql.createConnection({
 })
 db.connect((err) => {
   if (err) {
-      throw err;
+      console.log(error);
   }
   console.log('Connected to the database');
 });
