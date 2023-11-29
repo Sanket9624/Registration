@@ -40,12 +40,10 @@ app.use('/Log_in/sign_in', express.static(path.join(__dirname, 'sign_in')));
 app.get('/', (req, res) => {
             res.sendFile(path.join(__dirname, 'sign_in', 'index.html'));
           });
-          
 // Serve sign-in index.html on '/sign_in'
 app.get('/sign_in', (req, res) => {
             res.sendFile(path.join(__dirname, 'sign_in', 'index.html'));
           });
-          
 // Serve sign-up index.html on '/Log_in/sign_up'
 app.get('/Log_in/sign_up', (req, res) => {
             res.sendFile(path.join(__dirname, 'sign_up', 'index.html'));
@@ -62,19 +60,14 @@ app.post('/register', (req, res) => {
   const { user_name, Mobile_No, user_password } = req.body;
   // Perform user authentication/query in the database
   const sql = 'SELECT * FROM loginuserinfo WHERE  (user_name = ? OR Mobile_No = ?) AND user_password = ?';
-  console.log('Query:', sql); // Log the SQL query being executed
-  console.log('Request Body:', req.body); 
   db.query(sql, [user_name , user_name, user_password], (err, results) => {
       if (err) {
         console.error(`Your error is :${err}`);
           return res.status(500).send('Error in database');
       }
-      console.log('Results:', results);
       if (results.length > 0) {
         // Authentication successful - user found in the database
-        // Reset the email field after successful login
-        const script = '<script>document.getElementById("e-mail").value = "";</script>';
-        res.redirect('https://easy-blue-hippo-boot.cyclic.app/') // Send the script along with the response
+        res.redirect('https://weather-app-ooen.onrender.com') // Send the script along with the response
     } else {
           // Authentication failed - user not found or invalid credentials
           return res.status(401).send('User not found');
@@ -84,26 +77,20 @@ app.post('/register', (req, res) => {
 
 //Sign up
 app.post('/signup', (req, res) => {
-  console.log(req.headers); 
   const { user_name, user_password, firstName, lastName, Mobile_No , confirm_Password } = req.body;
-  console.log('Received data:', req.body);
-
   const insertQuery = 'INSERT INTO loginuserinfo (user_name,user_password,firstName,lastName,Mobile_No , confirm_Password) VALUES (?, ?, ?, ?, ?, ?)';
   db.query(insertQuery, [user_name, user_password, firstName, lastName, Mobile_No, confirm_Password], (err, result) => {
     if (err) {
       console.error('Error executing query: ', err);
       return res.status(500).json({ error: 'Internal server error' });
     }
-
     if (result.affectedRows === 1) {
-      res.redirect('https://easy-blue-hippo-boot.cyclic.app/')} else {
+      res.redirect('https://weather-app-ooen.onrender.com')} else {
       return res.status(500).json({ error: 'Failed to create user' });
     }
   });
-});
-       
+});    
 port = process.env.PORT
-
 app.listen(port ,() =>{
             console.log(`Port is running on ${port}`);
 })
