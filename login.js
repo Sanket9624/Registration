@@ -11,10 +11,10 @@ const { error } = require('console');
 const app = express()
 
 const db = mysql.createConnection({
-            host:process.env.MYSQL_HOST,
-            user:process.env.MYSQL_USER,  
-            database:process.env.MYSQL_DATABASE ,
-            password:process.env.MYSQL_PASSWORD
+            host:process.env.MYSQL_HOST || '127.0.0.1',
+            user:process.env.MYSQL_USER || 'root',  
+            database:process.env.MYSQL_DATABASE || 'registration' ,
+            password:process.env.MYSQL_PASSWORD || 'Sanket@9624'
 })
 db.connect((err) => {
   if (err) {
