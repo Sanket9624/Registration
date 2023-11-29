@@ -62,8 +62,9 @@ app.post('/register', (req, res) => {
   const sql = 'SELECT * FROM loginuserinfo WHERE  (user_name = ? OR Mobile_No = ?) AND user_password = ?';
   db.query(sql, [user_name , user_name, user_password], (err, results) => {
       if (err) {
-        console.error(`Your error is :${err}`);
-          return res.status(500).send('Error in database');
+        throw err;
+        //console.error(`Your error is :${err}`);
+          //return res.status(500).send('Error in database');
       }
       if (results.length > 0) {
         // Authentication successful - user found in the database
