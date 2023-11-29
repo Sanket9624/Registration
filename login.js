@@ -8,7 +8,7 @@ if (result.error) {
 const mysql =require('mysql2')
 const path = require('path')
 const bodyParser = require('body-parser');
-const { error, log } = require('console');
+const { error } = require('console');
 const app = express()
 
 const db = mysql.createConnection({
@@ -19,7 +19,7 @@ const db = mysql.createConnection({
 })
 db.connect((err) => {
   if (err) {
-      console.log(error);
+      throw err;
   }
   console.log('Connected to the database');
 });
@@ -27,11 +27,6 @@ db.connect((err) => {
 // Middleware to parse incoming request bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-// Serve static files (e.g., your index.html)
-// app.use(express.static('public'));
-
-
 app.use('/', express.static(path.join(__dirname, 'sign_in')));
 app.use('/sign_in', express.static(path.join(__dirname, 'sign_in')));
 app.use('/sign_up', express.static(path.join(__dirname, 'sign_up')));
@@ -63,14 +58,11 @@ app.post('/register', (req, res) => {
   const { user_name, Mobile_No, user_password } = req.body;
   // Perform user authentication/query in the database
   const sql = 'SELECT * FROM loginuserinfo WHERE  (user_name = ? OR Mobile_No = ?) AND user_password = ?';
-  console.log('Query:', sql); // Log the SQL query being executed
-  console.log('Request Body:', req.body); 
   db.query(sql, [user_name , user_name, user_password], (err, results) => {
       if (err) {
         console.error(error);
           return res.status(500).send('Error in database');
       }
-      console.log('Results:', results);
       if (results.length > 0) {
         // Authentication successful - user found in the database
         // Reset the email field after successful login
@@ -85,10 +77,7 @@ app.post('/register', (req, res) => {
 
 //Sign up
 app.post('/signup', (req, res) => {
-  console.log(req.headers); 
   const { user_name, user_password, firstName, lastName, Mobile_No , confirm_Password } = req.body;
-  console.log('Received data:', req.body);
-
   const insertQuery = 'INSERT INTO loginuserinfo (user_name,user_password,firstName,lastName,Mobile_No , confirm_Password) VALUES (?, ?, ?, ?, ?, ?)';
   db.query(insertQuery, [user_name, user_password, firstName, lastName, Mobile_No, confirm_Password], (err, result) => {
     if (err) {
