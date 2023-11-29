@@ -66,7 +66,7 @@ app.post('/register', (req, res) => {
   console.log('Request Body:', req.body); 
   db.query(sql, [user_name , user_name, user_password], (err, results) => {
       if (err) {
-        console.error(error);
+        console.error(`Your error is :${err}`);
           return res.status(500).send('Error in database');
       }
       console.log('Results:', results);
