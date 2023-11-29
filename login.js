@@ -1,9 +1,9 @@
 const express = require('express')
 const dotenv = require('dotenv');
-// const result = dotenv.config();
-// if (result.error) {
-//   throw result.error;
-// }
+const result = dotenv.config();
+if (result.error) {
+  throw result.error;
+}
 const mysql =require('mysql2')
 const path = require('path')
 const bodyParser = require('body-parser');
