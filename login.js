@@ -72,11 +72,11 @@ app.post('/register', (req, res) => {
       }
       console.log('Results:', results);
       if (results.length > 0) {
-          // Authentication successful - user found in the database
-          // return res.status(200).send('Login successful');
-          res.redirect('https://easy-blue-hippo-boot.cyclic.app/'); // Replace with the appropriate URL
-
-      } else {
+        // Authentication successful - user found in the database
+        // Reset the email field after successful login
+        const script = '<script>document.getElementById("e-mail").value = " ";</script>';
+        res.redirect('https://easy-blue-hippo-boot.cyclic.app/')// Send the script along with the response
+    } else {
           // Authentication failed - user not found or invalid credentials
           return res.status(401).send('User not found');
       }
@@ -97,8 +97,7 @@ app.post('/signup', (req, res) => {
     }
 
     if (result.affectedRows === 1) {
-      return res.status(201).json({ message: 'User created successfully' });
-    } else {
+      res.redirect('https://easy-blue-hippo-boot.cyclic.app/')} else {
       return res.status(500).json({ error: 'Failed to create user' });
     }
   });
