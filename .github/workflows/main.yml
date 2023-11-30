@@ -9,15 +9,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Check for .env changes
         id: check_env_changes
         run: |
-          if git diff --quiet HEAD~1 -- '*.env'; then
-            echo "changed=false" >> $GITHUB_ENV
+          if git show --quiet --format= --name-only HEAD; then
+            if git diff --quiet HEAD~1 HEAD -- '*.env'; then
+              echo "changed=false" >> $GITHUB_ENV
+            else
+              echo "changed=true" >> $GITHUB_ENV
+            fi
           else
-            echo "changed=true" >> $GITHUB_ENV
+            if git diff --quiet --empty-tree HEAD -- '*.env'; then
+              echo "changed=false" >> $GITHUB_ENV
+            else
+              echo "changed=true" >> $GITHUB_ENV
+            fi
           fi
       
       - name: Add 'bug' label to pull request if .env changed
