@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
 
       - name: Check for .env changes
         id: check_env_changes
@@ -28,9 +28,9 @@ jobs:
             fi
           fi
       
-      - name: Add 'bug' label to pull request if .env changed
+      - name: Add 'ENV Changed' label to pull request if .env changed
         if: steps.check_env_changes.outputs.changed == 'true'
-        uses: actions/github-script@v4
+        uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -39,6 +39,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: prNumber,
-              labels: ['bug']
+              labels: ['ENV Changed']
             });
-            console.log(`'bug' label added to PR ${prNumber}`);
