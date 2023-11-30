@@ -1,0 +1,36 @@
+name: "Add Bug Label on Env File Change"
+on:
+  pull_request_target:
+    paths:
+      - '**/.env'
+
+jobs:
+  add_bug_label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Check for .env changes
+        id: check_env_changes
+        run: |
+          if git diff --quiet HEAD^ HEAD --name-only '**/.env'; then
+            echo "changed=false" >> $GITHUB_ENV
+          else
+            echo "changed=true" >> $GITHUB_ENV
+          fi
+
+      - name: Add 'bug' label to pull request if .env changed
+        if: steps.check_env_changes.outputs.changed == 'true'
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            await github.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              labels: ['bug']
+            });
+            console.log(`'bug' label added to PR ${prNumber}`);
