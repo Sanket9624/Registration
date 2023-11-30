@@ -9,20 +9,30 @@ jobs:
   label_pr:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [16.x]
+
     steps:
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
       - name: Check out repository code
         uses: actions/checkout@v2
 
-      - name: Add label if .env changed
+      - name: Check for .env changes
+        id: check_env_changes
         run: |
           if git diff --quiet HEAD^ HEAD --name-only '**/.env'; then
-            echo "::set-output name=changed::false"
+            echo "changed=false" >> $GITHUB_ENV
           else
-            echo "::set-output name=changed::true"
+            echo "changed=true" >> $GITHUB_ENV
           fi
 
-      - name: Add label to pull request
-        if: steps.label_pr.outputs.changed == 'true'
+      - name: Add label to pull request if .env changed
+        if: steps.check_env_changes.outputs.changed == 'true'
         uses: actions/github-script@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -30,7 +40,7 @@ jobs:
             const pr = await github.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              pull_number: context.issue.number
+              pull_number: context.payload.pull_request.number
             });
             const prNumber = pr.data.number;
             await github.issues.addLabels({
