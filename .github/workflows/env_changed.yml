@@ -22,11 +22,17 @@ jobs:
             echo "changed=true" >> $GITHUB_ENV
           fi
 
-      - name: Add label to pull request if .env changed
+      - name: Add default label to pull request if .env changed
         if: steps.check_env_changes.outputs.changed == 'true'
-        uses: octokit/request-action@v2.x
+        uses: actions/github-script@v4
         with:
-          route: POST /repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels
-          headers:
-            authorization: ${{ secrets.GITHUB_TOKEN }}
-          body: '{"labels":["changes"]}'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            await github.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              labels: ['bug']
+            });
+            console.log(`Label 'bug' added to PR ${prNumber}`);
