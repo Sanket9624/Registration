@@ -1,39 +1,32 @@
-name: Label PR on Env Changes
+name: "Pull Request label"
 
 on:
   pull_request:
     paths:
       - '**/.env'
-
 jobs:
-  label_pr:
+  triage:
+    permissions:
+      contents: read
+      pull-requests: write
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [16.x]
-
-    steps:
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Check out repository code
-        uses: actions/checkout@v2
-
+steps:
+    - uses: actions/checkout@v3 
+      with:
       - name: Check for .env changes
         id: check_env_changes
+        repository: "sp969/Registration"
+    - uses: actions/labeler@v3
         run: |
-          if git diff --quiet HEAD^ HEAD --name-only '**/.env'; then
+          if git diff --quiet HEAD^ HEAD  '**/.env'; then
             echo "changed=false" >> $GITHUB_ENV
           else
             echo "changed=true" >> $GITHUB_ENV
           fi
 
-      - name: Add default label to pull request if .env changed
+      - name: Add label to pull request if .env changed
         if: steps.check_env_changes.outputs.changed == 'true'
-        uses: actions/github-script@v4
+        uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -42,6 +35,6 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: prNumber,
-              labels: ['bug']
+              labels: ['Env Changes']
             });
-            console.log(`Label 'bug' added to PR ${prNumber}`);
+            console.log(`Label 'Env Changes' added to PR ${prNumber}`);
