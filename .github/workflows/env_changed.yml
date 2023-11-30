@@ -9,16 +9,7 @@ jobs:
   label_pr:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [16.x]
-
     steps:
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-
       - name: Check out repository code
         uses: actions/checkout@v2
 
@@ -33,20 +24,9 @@ jobs:
 
       - name: Add label to pull request if .env changed
         if: steps.check_env_changes.outputs.changed == 'true'
-        uses: actions/github-script@v4
+        uses: octokit/request-action@v2.x
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const pr = await github.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.payload.pull_request.number
-            });
-            const prNumber = pr.data.number;
-            await github.issues.addLabels({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: prNumber,
-              labels: ['Env Changes']
-            });
-            console.log(`Label added to PR ${prNumber}: Env Changes`);
+          route: POST /repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels
+          headers:
+            authorization: ${{ secrets.GITHUB_TOKEN }}
+          body: '{"labels":["changes"]}'
