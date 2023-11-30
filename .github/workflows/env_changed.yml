@@ -1,12 +1,12 @@
-name: Label Env Changes
+name: Label PR on Env Changes
 
 on:
-  push:
+  pull_request:
     paths:
       - '**/.env'
 
 jobs:
-  label_changes:
+  label_pr:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,17 +21,22 @@ jobs:
             echo "::set-output name=changed::true"
           fi
 
-      - name: Add label
-        if: steps.label_changes.outputs.changed == 'true'
+      - name: Add label to pull request
+        if: steps.label_pr.outputs.changed == 'true'
         uses: actions/github-script@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const issue = await github.issues.createLabel({
+            const pr = await github.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: context.issue.number,
-              name: 'Env Changes',
-              color: '009800'
+              pull_number: context.issue.number
             });
-            console.log(`Label added: ${issue.data.name}`);
+            const prNumber = pr.data.number;
+            await github.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              labels: ['Env Changes']
+            });
+            console.log(`Label added to PR ${prNumber}: Env Changes`);
