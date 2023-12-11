@@ -1,40 +1,16 @@
 const express = require('express')
-const app = express()
 const db = require('./database.js')
 const path = require('path')
-const bodyParser = require('body-parser')
-
-app.use(bodyParser.urlencoded({ extended: false }))
-
-app.use(bodyParser.json())
+const app = express()
 
 // Serve static files (e.g., your index.html)
 
 app.use(express.static('public'));
-
 app.use('/', express.static(path.join(__dirname, 'sign_in')));
 app.use('/sign_in', express.static(path.join(__dirname, 'sign_in')));
 app.use('/sign_up', express.static(path.join(__dirname, 'sign_up')));
 app.use('/Log_in/sign_up', express.static(path.join(__dirname, 'sign_up')));
 app.use('/Log_in/sign_in', express.static(path.join(__dirname, 'sign_in')));
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'sign_in', 'index.html'));
-});
-// Serve sign-in index.html on '/sign_in'
-app.get('/sign_in', (req, res) => {
-  res.sendFile(path.join(__dirname, 'sign_in', 'index.html'));
-});
-// Serve sign-up index.html on '/Log_in/sign_up'
-app.get('/Log_in/sign_up', (req, res) => {
-  res.sendFile(path.join(__dirname, 'sign_up', 'index.html'));
-});
-app.get('/Log_in/sign_in', (req, res) => {
-  res.sendFile(path.join(__dirname, 'sign_up', 'index.html'));
-});
-app.get('/sign_up', (req, res) => {
-  res.sendFile(path.join(__dirname, 'sign_up', 'index.html'));
-});
 // login page
 // Handle POST request to '/login' endpoint
 app.post('/register', (req, res) => {
@@ -70,7 +46,5 @@ app.post('/signup', (req, res) => {
     }
   });
 });
-const port = process.env.PORT
-app.listen(port, () => {
-  console.log(`App is running on http://localhost:${port}`);
-})
+
+module.exports = app
