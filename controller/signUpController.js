@@ -2,7 +2,7 @@ const db = require("../database")
 
 const newUser = (req,res) =>{
 const { userName, userPassword, firstName, lastName, MobileNo,confirmPassword} = req.body;
-  const insertQuery = 'INSERT INTO userinfo (userName,userPassword,firstName,lastName,MobileNo,confirmPassword ) VALUES (?, ?, ?, ?, ?,?)';
+  const insertQuery = 'INSERT INTO userinfo (userName,userPassword,firstName,lastName,MobileNo,confirmPassword ) VALUES (?, ?, ?, ?, ?, ?)';
   db.query(insertQuery, [userName, userPassword, firstName, lastName, MobileNo,confirmPassword], (err, result) => {
     if (err) {
       console.error('Error executing query: ', err);
