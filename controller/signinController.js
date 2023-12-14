@@ -1,14 +1,12 @@
 const db = require("../database")
-function registerUser (req, res) {
-            const { userName, MobileNo, userPassword } = req.body;
-const sql = 'SELECT * FROM userinfo WHERE  (userName = ? OR MobileNo = ?) AND userPassword = ?';
-// console.log(sql);
+
+const registerUser = (req, res) => {
+          const { userName, MobileNo, userPassword } = req.body;
+          const sql = 'SELECT * FROM userinfo WHERE  (userName = ? OR MobileNo = ?) AND userPassword = ?';
   db.query(sql, [userName, userName, userPassword], (err, results) => {
     if (err) {
       throw err;
     }
-    // console.log(results)
-    console.log("Hello World");
     if (results.length > 0) {
       // Authentication successful - user found in the database
       res.redirect('https://weather-app-ooen.onrender.com') // Send the script along with the response
@@ -18,7 +16,6 @@ const sql = 'SELECT * FROM userinfo WHERE  (userName = ? OR MobileNo = ?) AND us
     }
   });
 }
-
 module.exports = {
             registerUser : registerUser
 }
