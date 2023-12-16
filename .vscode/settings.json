@@ -12,6 +12,19 @@
                                     "name": "user ",
                                     "database": "register",
                                     "username": "root"
+                        },
+                        {
+                                    "mysqlOptions": {
+                                                "authProtocol": "default",
+                                                "enableSsl": "Disabled"
+                                    },
+                                    "previewLimit": 50,
+                                    "server": "sql12.freesqldatabase.com",
+                                    "port": 3306,
+                                    "driver": "MySQL",
+                                    "name": "sql12670266",
+                                    "username": "sql12670266",
+                                    "database": "sql12670266"
                         }
             ]
 }
